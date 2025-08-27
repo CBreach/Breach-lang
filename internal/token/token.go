@@ -16,6 +16,8 @@ const (
 	MOD      Kind = "%"
 	SLASH    Kind = "/"
 	BANG     Kind = "!"
+	COLON    Kind = ":"
+	SCOLON   Kind = ";"
 	//two cahar symbols
 	ASSIGN Kind = "="
 	EQ     Kind = "=="
@@ -26,7 +28,7 @@ const (
 	LTE    Kind = "<="
 
 	//identifier
-	INDENT Kind = "INDENT"
+	IDENT  Kind = "IDENT"
 	NUMBER Kind = "NUMBER"
 	STRING Kind = "STRING"
 
@@ -55,12 +57,12 @@ const (
 type Token struct {
 	Kind    Kind
 	Lexme   string
-	lineNum int
-	colNum  int
+	LineNum int
+	ColNum  int
 }
 
 // lookup table for keywords
-var keywords = map[string]Kind{
+var Keywords = map[string]Kind{
 	"func":   KW_FUNC,
 	"var":    KW_VAR,
 	"let":    KW_LET,

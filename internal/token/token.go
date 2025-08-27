@@ -56,7 +56,7 @@ const (
 
 type Token struct {
 	Kind    Kind
-	Lexme   string
+	Lexeme  string
 	LineNum int
 	ColNum  int
 }

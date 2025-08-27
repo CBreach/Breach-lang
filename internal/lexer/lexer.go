@@ -49,10 +49,10 @@ func lexer(input string) []token.Token {
 	}
 	return tokens
 }
-func buildToken(Kind token.Kind, Lexme string, line int, col int) token.Token {
+func buildToken(kind token.Kind, lexeme string, line int, col int) token.Token {
 	return token.Token{
-		Kind:    Kind,
-		Lexme:   Lexme,
+		Kind:    kind,
+		Lexeme:  lexeme,
 		LineNum: line,
 		ColNum:  col,
 	}

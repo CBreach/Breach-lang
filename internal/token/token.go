@@ -51,3 +51,30 @@ const (
 	EOF     Kind = "EOF"
 	ILLEGAL Kind = "ILLEGAL"
 )
+
+type Token struct {
+	Kind    Kind
+	Lexme   string
+	lineNum int
+	colNum  int
+}
+
+// lookup table for keywords
+var keywords = map[string]Kind{
+	"func":   KW_FUNC,
+	"var":    KW_VAR,
+	"let":    KW_LET,
+	"if":     KW_IF,
+	"else":   KW_ELSE,
+	"while":  KW_WHILE,
+	"for":    KW_FOR,
+	"do":     KW_DO,
+	"in":     KW_IN,
+	"return": KW_RETURN,
+	"True":   KW_TRUE,
+	"False":  KW_FALSE,
+	"nil":    KW_NIL,
+	"or":     KW_OR,
+	"and":    KW_AND,
+	"import": KW_IMPORT,
+}

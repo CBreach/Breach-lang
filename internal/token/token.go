@@ -80,3 +80,8 @@ var Keywords = map[string]Kind{
 	"and":    KW_AND,
 	"import": KW_IMPORT,
 }
+
+/*
+	the same way we have a table of keywords it would potentially be useful to have a table for all the single
+	character tokens so that we don't have to use a huge switch statement in the lexer...
+*/

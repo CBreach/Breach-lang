@@ -17,7 +17,7 @@ func lexer(input string) []token.Token {
 	runes := []rune(input)
 	for current < len(runes) {
 		currChar := runes[current] //stores the current character
-
+		// this is just a test to make sure that i can push... i was having problems with my token on this machine lol
 		switch {
 		case isLetter(currChar):
 			// in the case that we encounter a letter it's important that we capture the entire thing as a single token

@@ -85,3 +85,26 @@ var Keywords = map[string]Kind{
 	the same way we have a table of keywords it would potentially be useful to have a table for all the single
 	character tokens so that we don't have to use a huge switch statement in the lexer...
 */
+var TokenTable = map[string]Kind{
+	"(":LPAREN, 
+	")":RPAREN, 
+	"[":LBRACKET,
+	"]":RBRACKET,
+	"{":LBRACE,  
+	"}":RBRACE, 
+	"+":PLUS, 
+	"-":MINUS, 
+	"*":STAR, 
+	"%":MOD,
+	"/":SLASH, 
+	"!":BANG, 
+	":":COLON, 
+	";":SCOLON,
+	"=":ASSIGN,
+	"==": EQ,
+	"!=": NEQ, 
+	">": GT,    
+	"<":LF,    
+	">=": GTE,   
+	"<=": LTE, 
+}

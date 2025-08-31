@@ -27,6 +27,7 @@ func lexer(input string) []token.Token {
 	for current < len(runes) {
 		log.Println("traversing through the runes: ", runes)
 		currChar := runes[current] //stores the current character
+		log.Printf("current rune: %c, and this is the rune in str : %s \n", currChar, string(currChar))
 		switch {
 		case isLetter(currChar):
 			// in the case that we encounter a letter it's important that we capture the entire thing as a single token
@@ -45,6 +46,7 @@ func lexer(input string) []token.Token {
 				tokens = append(tokens, buildToken(token.IDENT, val, line, col))
 			}
 		case isNumber(currChar):
+			log.Println("this is the rune being eval:", currChar)
 			// similar to how we handled letters, when we encounter a number we want to grab the hole thing as a single token rather
 			//TODO: handle floats
 			var val string
@@ -76,11 +78,9 @@ func lexer(input string) []token.Token {
 			if current+1 < len(runes) && runes[current+1] == '=' {
 				tokens = append(tokens, buildToken(token.EQ, "==", line, col))
 				current += 2
-				continue
 			} else {
 				tokens = append(tokens, buildToken(token.ASSIGN, string(currChar), line, col))
 				current++
-				continue
 			}
 		case currChar == '!':
 			//check if the next char is also an '='
@@ -220,7 +220,7 @@ func isLetter(ch rune) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 func isNumber(ch rune) bool {
-	return '9' <= ch && ch >= '0' || ch >= 48 && ch <= 57
+	return ch >= '0' && ch <= '9' || ch >= 48 && ch <= 57
 }
 func isAlphaNumeric(ch rune) bool {
 	return isLetter(ch) || isNumber(ch)

@@ -32,3 +32,32 @@ func TestLexerNumber(t *testing.T){
 		t.Fatalf("Lexer mismatch: expected -> %v but got -> %v", expected, token)
 	}
 }
+func TestLexer(t *testing.T){
+	expected := []token.Token{
+		{Kind: token.KW_VAR, Lexeme: "var", LineNum: 3,ColNum: 1},
+		{Kind: token.IDENT, Lexeme: "x", LineNum: 3, ColNum: 2},
+		{Kind: token.ASSIGN, Lexeme: "=", LineNum: 3, ColNum: 3},
+		{Kind: token.NUMBER, Lexeme: "24", LineNum: 3, ColNum: 4},
+		{Kind: token.SCOLON, Lexeme: ";", LineNum: 3, ColNum: 5},
+	}
+	expected2 := []token.Token{
+		{Kind: token.KW_IF, Lexeme: "if", LineNum: 4, ColNum: 1},
+		{Kind: token.LPAREN, Lexeme: "(", LineNum: 4, ColNum: 2},
+		{Kind: token.IDENT, Lexeme: "i", LineNum: 4, ColNum: 3},
+		{Kind: token.LTE, Lexeme: "<=", LineNum: 4, ColNum: 4},
+		{Kind: token.NUMBER, Lexeme: "2", LineNum: 4, ColNum: 5},
+		{Kind: token.RPAREN, Lexeme: ")", LineNum: 4, ColNum: 6},
+		{Kind: token.RBRACE, Lexeme: "{", LineNum: 4, ColNum: 7},
+	}
+	token := lexer("var x = 24;")
+	token2 := lexer("if (i <= 2){")
+
+	if !slices.Equal(token, expected){
+		t.Fatalf("Lexer mismatch: expected -> %v \n \t\t\t\t but got -> %v", expected, token)
+
+	}
+	if !slices.Equal(token2, expected2){
+		t.Fatalf("Lexer mismatch: expected -> %v but got -> %v", expected2, token2)
+
+	}
+}

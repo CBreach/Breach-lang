@@ -13,7 +13,6 @@ import (
 // this will do for now
 var line = 1 //TODO: encapsulate this so that its not a global variable
 func lexer(input string) []token.Token {
-	log.Println("we are entering the lexer")
 	input += "\n" // add a newline at the end of the input to make sure the last token is processed
 	var tokens []token.Token
 
@@ -25,13 +24,10 @@ func lexer(input string) []token.Token {
 	*/
 	runes := []rune(input)
 	for current < len(runes) {
-		log.Println("traversing through the runes: ", runes)
 		currChar := runes[current] //stores the current character
-		log.Printf("current rune: %c, and this is the rune in str : %s \n", currChar, string(currChar))
 		switch {
 		case token.TokenTable[string(currChar)] != "":
 			if currChar == '!' || currChar == '<' || currChar == '>' || currChar == '='{
-				log.Println("and here")
 				tokens = append(tokens,checkNextToken(runes, &current, col))
 			}else{
 				tokVal := string(currChar)
@@ -59,7 +55,6 @@ func lexer(input string) []token.Token {
 				tokens = append(tokens, buildToken(token.IDENT, val, line, col))
 			}
 		case isNumber(currChar):
-			log.Println("this is the rune being eval:", currChar)
 			// similar to how we handled letters, when we encounter a number we want to grab the hole thing as a single token rather
 			//TODO: handle floats
 			var val string
@@ -89,18 +84,16 @@ func lexer(input string) []token.Token {
 			} else {
 				tokens = append(tokens, buildToken(token.SLASH, string(currChar), line, col))
 				current++
-				continue
 			}
 		case currChar == '"':
 			//similar to how we handle letters and numbers we want to grab the entire string as a single token
 			startPointer := current + 1 //skip the opening quote
 			endPointer, err := traverseToken(runes, "string", startPointer)
 			if err != nil {
-				tokens = append(tokens, buildToken(token.ILLEGAL, string(runes[startPointer:endPointer]), line, col))
+				tokens = append(tokens, buildToken(token.ILLEGAL, string(runes[startPointer:endPointer-1]), line, col))
+				current = endPointer
 			} else {
-				current = endPointer + 1 //move past the closing quote
-				// end pointer is at the index of the closing quote and we want to exclude that from the string token
-				endPointer--
+				current = endPointer + 1 //move past the closing quote			
 				tokens = append(tokens, buildToken(token.STRING, string(runes[startPointer:endPointer]), line, col))
 			}
 		default:
@@ -116,11 +109,8 @@ func lexer(input string) []token.Token {
 }
 func checkNextToken(runes []rune, current *int, col int)token.Token{
 	tokVal := string(runes[*current])
-	log.Printf("we are here")
 	if *current + 1 < len(runes) && runes[*current+1] == '='{
-		log.Printf("and now we are here")
 		tokVal = string(runes[*current: *current+2])
-		log.Printf("here is the updated val: %s", tokVal)
 		*current+=2
 	}else{*current++}
 	tokKind, ok := token.TokenTable[tokVal]
@@ -161,13 +151,15 @@ func traverseToken(runes []rune, tokenType string, strIndex int) (int, error) {
 		}
 	} else if tokenType == "string" {
 		// we want to keep going until we find the closing quote
-		for currChar != '"' && currChar != '\n' {
-			if current >= len(runes) {
-				return endIndex, errors.New("unterminated string")
-			}
+		for currChar != '"' && current < len(runes) {
+			log.Printf("current index %d", current)
 			current++
 			endIndex++
+			if current >= len(runes){
+				return endIndex, errors.New("unterminated string")
+			}
 			currChar = runes[current]
+			log.Printf("current index %d and current char %c", current, currChar)
 		}
 	}
 	return endIndex, nil

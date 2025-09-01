@@ -61,3 +61,24 @@ func TestLexer(t *testing.T){
 
 	}
 }
+func TestLexerStr(t *testing.T){
+	expected := []token.Token{
+		{Kind: token.STRING, Lexeme: "this is a string", LineNum: 5, ColNum: 1},
+	}
+	token := lexer("\"this is a string\"")
+	if !slices.Equal(token, expected){
+		t.Fatalf("Lexer mismatch: expected -> %v \n \t\t\t\t but got -> %v", expected, token)
+
+	}
+}
+func TestLexerIllegalStr(t *testing.T){
+	expected := []token.Token{
+		{Kind: token.ILLEGAL, Lexeme: "this is an invalid string", LineNum: 6, ColNum: 1},
+	}
+	token := lexer("\"this is an invalid string")
+
+	if !slices.Equal(token, expected){
+		t.Fatalf("Lexer mismatch: expected -> %v \n \t\t\t\t but got -> %v", expected, token)
+
+	}
+}

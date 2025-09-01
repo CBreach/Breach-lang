@@ -47,7 +47,7 @@ func TestLexer(t *testing.T){
 		{Kind: token.LTE, Lexeme: "<=", LineNum: 4, ColNum: 4},
 		{Kind: token.NUMBER, Lexeme: "2", LineNum: 4, ColNum: 5},
 		{Kind: token.RPAREN, Lexeme: ")", LineNum: 4, ColNum: 6},
-		{Kind: token.RBRACE, Lexeme: "{", LineNum: 4, ColNum: 7},
+		{Kind: token.LBRACE, Lexeme: "{", LineNum: 4, ColNum: 7},
 	}
 	token := lexer("var x = 24;")
 	token2 := lexer("if (i <= 2){")
@@ -57,7 +57,7 @@ func TestLexer(t *testing.T){
 
 	}
 	if !slices.Equal(token2, expected2){
-		t.Fatalf("Lexer mismatch: expected -> %v but got -> %v", expected2, token2)
+		t.Fatalf("Lexer mismatch: expected -> %v \n \t\t\t\t but got -> %v", expected2, token2)
 
 	}
 }

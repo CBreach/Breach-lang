@@ -23,7 +23,7 @@ const (
 	EQ     Kind = "=="
 	NEQ    Kind = "!="
 	GT     Kind = ">"
-	LF     Kind = "<"
+	LT     Kind = "<"
 	GTE    Kind = ">="
 	LTE    Kind = "<="
 
@@ -95,16 +95,16 @@ var TokenTable = map[string]Kind{
 	"+":PLUS, 
 	"-":MINUS, 
 	"*":STAR, 
-	"%":MOD,
-	"/":SLASH, 
+	"%":MOD, 
 	"!":BANG, 
 	":":COLON, 
 	";":SCOLON,
 	"=":ASSIGN,
-	"==": EQ,
-	"!=": NEQ, 
-	">": GT,    
-	"<":LF,    
-	">=": GTE,   
-	"<=": LTE, 
+	"<": LT,
+	">": GT,
+	//NOW the two charcater tokens... hopefully mixing one and two char will not affect the look up (doubt it)
+	"==" : EQ,
+	">=" : GTE,
+	"<=" : LTE,
+	"!=" : NEQ,
 }

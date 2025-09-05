@@ -18,7 +18,7 @@ const (
 	BANG     Kind = "!"
 	COLON    Kind = ":"
 	SCOLON   Kind = ";"
-	//two cahar symbols
+	//two char symbols
 	ASSIGN Kind = "="
 	EQ     Kind = "=="
 	NEQ    Kind = "!="
@@ -82,29 +82,29 @@ var Keywords = map[string]Kind{
 }
 
 /*
-	the same way we have a table of keywords it would potentially be useful to have a table for all the single
-	character tokens so that we don't have to use a huge switch statement in the lexer...
+the same way we have a table of keywords it would potentially be useful to have a table for all the single
+character tokens so that we don't have to use a huge switch statement in the lexer...
 */
 var TokenTable = map[string]Kind{
-	"(":LPAREN, 
-	")":RPAREN, 
-	"[":LBRACKET,
-	"]":RBRACKET,
-	"{":LBRACE,  
-	"}":RBRACE, 
-	"+":PLUS, 
-	"-":MINUS, 
-	"*":STAR, 
-	"%":MOD, 
-	"!":BANG, 
-	":":COLON, 
-	";":SCOLON,
-	"=":ASSIGN,
+	"(": LPAREN,
+	")": RPAREN,
+	"[": LBRACKET,
+	"]": RBRACKET,
+	"{": LBRACE,
+	"}": RBRACE,
+	"+": PLUS,
+	"-": MINUS,
+	"*": STAR,
+	"%": MOD,
+	"!": BANG,
+	":": COLON,
+	";": SCOLON,
+	"=": ASSIGN,
 	"<": LT,
 	">": GT,
-	//NOW the two charcater tokens... hopefully mixing one and two char will not affect the look up (doubt it)
-	"==" : EQ,
-	">=" : GTE,
-	"<=" : LTE,
-	"!=" : NEQ,
+	//NOW the two character tokens... hopefully mixing one and two char will not affect the look up (doubt it)
+	"==": EQ,
+	">=": GTE,
+	"<=": LTE,
+	"!=": NEQ,
 }

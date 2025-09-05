@@ -25,6 +25,7 @@ func lexer(input string) []token.Token {
 	runes := []rune(input)
 	for current < len(runes) {
 		currChar := runes[current] //stores the current character
+		log.Printf("Current char: %c", currChar)
 		switch {
 		case token.TokenTable[string(currChar)] != "":
 			if currChar == '!' || currChar == '<' || currChar == '>' || currChar == '=' {
@@ -32,7 +33,7 @@ func lexer(input string) []token.Token {
 			} else {
 				tokVal := string(currChar)
 				tokKind, ok := token.TokenTable[tokVal]
-				if !ok {
+				if !ok { //this is a bit redundant since this should technically never happen
 					log.Fatalf("Could not find token %s", tokVal)
 				}
 				tokens = append(tokens, buildToken(tokKind, tokVal, line, col))
@@ -102,7 +103,7 @@ func lexer(input string) []token.Token {
 			log.Println("we are in defualt... something is off", runes[current])
 			invalidTok := handleInvalidToken(runes, &current)
 			tokens = append(tokens, buildToken(token.ILLEGAL, invalidTok, line, col))
-
+			log.Printf("Invalid token: %s and our current char is %c", invalidTok, runes[current])
 		}
 		col++
 	}
@@ -113,9 +114,11 @@ func handleInvalidToken(runes []rune, current *int) string {
 	currentChar := string(runes[*current])
 	startptr := *current
 	for *current < len(runes) && token.TokenTable[currentChar] == "" {
+		log.Printf("Current char in invalid token handler: %s", currentChar)
 		*current++
 		currentChar = string(runes[*current])
 	}
+	log.Printf("Invalid token captured: %s, current is now: %c", currentChar, *current)
 	return string(runes[startptr:*current])
 
 }

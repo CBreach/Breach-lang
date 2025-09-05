@@ -84,7 +84,7 @@ func TestLexerIllegalStr(t *testing.T) {
 
 	}
 }
-func testLexerIllegalToken(t *testing.T) {
+func TestLexerIllegalToken(t *testing.T) {
 	expected := []token.Token{
 		{Kind: token.ILLEGAL, Lexeme: "_gato", LineNum: 7, ColNum: 1},
 		{Kind: token.ASSIGN, Lexeme: "=", LineNum: 7, ColNum: 2},

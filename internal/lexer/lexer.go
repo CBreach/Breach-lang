@@ -27,12 +27,12 @@ func lexer(input string) []token.Token {
 		currChar := runes[current] //stores the current character
 		switch {
 		case token.TokenTable[string(currChar)] != "":
-			if currChar == '!' || currChar == '<' || currChar == '>' || currChar == '='{
-				tokens = append(tokens,checkNextToken(runes, &current, col))
-			}else{
+			if currChar == '!' || currChar == '<' || currChar == '>' || currChar == '=' {
+				tokens = append(tokens, checkNextToken(runes, &current, col))
+			} else {
 				tokVal := string(currChar)
 				tokKind, ok := token.TokenTable[tokVal]
-				if !ok{
+				if !ok {
 					log.Fatalf("Could not find token %s", tokVal)
 				}
 				tokens = append(tokens, buildToken(tokKind, tokVal, line, col))
@@ -93,31 +93,45 @@ func lexer(input string) []token.Token {
 				tokens = append(tokens, buildToken(token.ILLEGAL, string(runes[startPointer:endPointer-1]), line, col))
 				current = endPointer
 			} else {
-				current = endPointer + 1 //move past the closing quote			
+				current = endPointer + 1 //move past the closing quote
 				tokens = append(tokens, buildToken(token.STRING, string(runes[startPointer:endPointer]), line, col))
 			}
 		default:
 			// assign the token as being illegal
 			// grab from first index of the token up until the char before the next space or \n character
 			log.Println("we are in defualt... something is off", runes[current])
-			return tokens
+			invalidTok := handleInvalidToken(runes, &current)
+			tokens = append(tokens, buildToken(token.ILLEGAL, invalidTok, line, col))
+
 		}
 		col++
 	}
 	line++
 	return tokens
 }
-func checkNextToken(runes []rune, current *int, col int)token.Token{
+func handleInvalidToken(runes []rune, current *int) string {
+	currentChar := string(runes[*current])
+	startptr := *current
+	for *current < len(runes) && token.TokenTable[currentChar] == "" {
+		*current++
+		currentChar = string(runes[*current])
+	}
+	return string(runes[startptr:*current])
+
+}
+func checkNextToken(runes []rune, current *int, col int) token.Token {
 	tokVal := string(runes[*current])
-	if *current + 1 < len(runes) && runes[*current+1] == '='{
-		tokVal = string(runes[*current: *current+2])
-		*current+=2
-	}else{*current++}
+	if *current+1 < len(runes) && runes[*current+1] == '=' {
+		tokVal = string(runes[*current : *current+2])
+		*current += 2
+	} else {
+		*current++
+	}
 	tokKind, ok := token.TokenTable[tokVal]
-	if !ok{
+	if !ok {
 		log.Fatalf("Token not found: %s", tokKind)
 	}
-	return buildToken(tokKind, tokVal,line,col)
+	return buildToken(tokKind, tokVal, line, col)
 }
 func traverseToken(runes []rune, tokenType string, strIndex int) (int, error) {
 	endIndex := strIndex
@@ -152,14 +166,12 @@ func traverseToken(runes []rune, tokenType string, strIndex int) (int, error) {
 	} else if tokenType == "string" {
 		// we want to keep going until we find the closing quote
 		for currChar != '"' && current < len(runes) {
-			log.Printf("current index %d", current)
 			current++
 			endIndex++
-			if current >= len(runes){
+			if current >= len(runes) {
 				return endIndex, errors.New("unterminated string")
 			}
 			currChar = runes[current]
-			log.Printf("current index %d and current char %c", current, currChar)
 		}
 	}
 	return endIndex, nil

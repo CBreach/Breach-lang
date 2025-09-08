@@ -25,7 +25,6 @@ func lexer(input string) []token.Token {
 	runes := []rune(input)
 	for current < len(runes) {
 		currChar := runes[current] //stores the current character
-		log.Printf("Current char: %c", currChar)
 		switch {
 		case token.TokenTable[string(currChar)] != "":
 			if currChar == '!' || currChar == '<' || currChar == '>' || currChar == '=' {
@@ -39,7 +38,7 @@ func lexer(input string) []token.Token {
 				tokens = append(tokens, buildToken(tokKind, tokVal, line, col))
 				current++
 			}
-		case isLetter(currChar):
+		case isLetter(currChar, current):
 			// in the case that we encounter a letter it's important that we capture the entire thing as a single token
 			var val string
 			startPointer, endPointer := current, current
@@ -100,10 +99,8 @@ func lexer(input string) []token.Token {
 		default:
 			// assign the token as being illegal
 			// grab from first index of the token up until the char before the next space or \n character
-			log.Println("we are in defualt... something is off", runes[current])
 			invalidTok := handleInvalidToken(runes, &current)
 			tokens = append(tokens, buildToken(token.ILLEGAL, invalidTok, line, col))
-			log.Printf("Invalid token: %s and our current char is %c", invalidTok, runes[current])
 		}
 		col++
 	}
@@ -114,11 +111,9 @@ func handleInvalidToken(runes []rune, current *int) string {
 	currentChar := string(runes[*current])
 	startptr := *current
 	for *current < len(runes) && token.TokenTable[currentChar] == "" {
-		log.Printf("Current char in invalid token handler: %s", currentChar)
 		*current++
 		currentChar = string(runes[*current])
 	}
-	log.Printf("Invalid token captured: %s, current is now: %c", currentChar, *current)
 	return string(runes[startptr:*current])
 
 }
@@ -141,7 +136,7 @@ func traverseToken(runes []rune, tokenType string, strIndex int) (int, error) {
 	current := strIndex
 	currChar := runes[current]
 	if tokenType == "letter" {
-		for isAlphaNumeric(currChar) || currChar == '\n' {
+		for isAlphaNumeric(currChar, current) || currChar == '\n' {
 			current++
 			if current >= len(runes) {
 				break
@@ -187,12 +182,15 @@ func buildToken(kind token.Kind, lexeme string, line int, col int) token.Token {
 		ColNum:  col,
 	}
 }
-func isLetter(ch rune) bool {
+func isLetter(ch rune, current int) bool {
+	if current == 0 && ch == '_' {
+		return false //we do this because no token can begin with _
+	}
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 func isNumber(ch rune) bool {
 	return ch >= '0' && ch <= '9' || ch >= 48 && ch <= 57
 }
-func isAlphaNumeric(ch rune) bool {
-	return isLetter(ch) || isNumber(ch)
+func isAlphaNumeric(ch rune, current int) bool {
+	return isLetter(ch, current) || isNumber(ch)
 }

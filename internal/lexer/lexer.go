@@ -12,7 +12,7 @@ import (
 // perhaphs making line a class variable for token and having a helper to increment would be a better approach..
 // this will do for now
 var line = 1 //TODO: encapsulate this so that its not a global variable
-func lexer(input string) []token.Token {
+func lexer(input string) []token.Token { //perhaps it would be a good idea to pass the line counter as a variable to the function so that way different files start all at 0 when compiling
 	input += "\n" // add a newline at the end of the input to make sure the last token is processed
 	var tokens []token.Token
 

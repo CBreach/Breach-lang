@@ -5,8 +5,87 @@ import (
 	"testing"
 
 	"github.com/Breach-lang/internal/token"
+	"github.com/stretchr/testify/assert"
 )
 
+// this is a test for all the helper functions that are used in the lexer... the main functionalities of the lexer will be tested bellow this block
+
+func TestIsNumber(t *testing.T){
+	// its important to take into consideration that the is Number function only considers positive numbers 1 <= x <= 9 since the negative sign is its own separate token
+	assert.False(t, isNumber('d'))
+	assert.True(t, isNumber('9'))
+	assert.False(t, isNumber('_'))
+}
+
+func TestIsLetter(t *testing.T){
+	assert.False(t, isLetter('_',0))
+	assert.True(t, isLetter('_', 3))
+	assert.True(t, isLetter('a',1))
+	assert.True(t, isLetter('X', 10))
+}
+func TestIsAlphaNum(t *testing.T){
+	assert.True(t, isAlphaNumeric('V', 10))
+	assert.True(t, isAlphaNumeric('_', 10))
+	assert.True(t, isAlphaNumeric('9', 10))
+
+	assert.False(t, isAlphaNumeric('%', 3))
+	assert.False(t, isAlphaNumeric('_', 0))
+}
+
+func TestBuildToken(t *testing.T){
+	expected := token.Token{
+		Kind: token.IDENT,
+		Lexeme: "test",
+		LineNum: 1,
+		ColNum: 1,
+	}
+	token := buildToken(token.IDENT, "test", 1,1)
+	assert.Equal(t,expected,token)
+}
+
+func TestTraverseTokenString(t *testing.T){
+	runes := []rune("this is a string\"") // we have the string in that shape because we skip the ommit the opening quote insde the lexer
+	curr, err := traverseToken(runes, "string",0)
+	assert.Equal(t,curr, 16)
+	assert.Nil(t,err)
+
+}
+func TestTraverseTokenInvalidString(t *testing.T){
+	runes := []rune("this is an invalid string")
+	curr, err := traverseToken(runes, "string", 0)
+	assert.Equal(t,curr, 25)
+	assert.Error(t, err)
+}
+func TestTraverseTokenLetter(t *testing.T){
+	runes := []rune("test")
+	curr, err := traverseToken(runes, "letter", 0)
+	assert.Equal(t, curr,3)
+	assert.Nil(t,err)
+}
+func TestTraverseTokenNumber(t *testing.T){
+	runes :=[]rune("4333333")
+	curr, err := traverseToken(runes, "number", 0)
+	assert.Equal(t,curr,6)
+	assert.Nil(t, err)
+}
+func TestTraverseTokenDecimal(t *testing.T){
+	runes := []rune("400.100")
+	curr, err := traverseToken(runes, "number", 0)
+	assert.Equal(t,curr, 6)
+	assert.Nil(t, err)
+}
+func TestTraverseTokenInalid(t *testing.T){
+	runes := []rune("400.1.1")
+	curr, err := traverseToken(runes, "number", 0)
+	assert.Equal(t,curr,6)
+	assert.Error(t,err)
+}
+
+
+/*
+	============================End of helper function testing================================
+
+*/
 /*
 this tests if the lexer works when the rune encounter is a letter
 it should capture entire tokens:
